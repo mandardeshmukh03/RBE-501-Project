@@ -1,0 +1,31 @@
+clear
+syms theta1 theta2 theta3 theta4 theta5 theta6 
+u = symunit;
+a = [0; 206.16; 200;0; 0; 0];
+alpha = [90; 0; 0; 90; 0; 0]*u.degree; % in degree unit
+d = [113.25; 0; 0; 0; 65; 66.05];
+% in degree unit
+theta = [theta1; theta2+76*u.deg; theta3 - 76*u.deg; theta4-90*u.deg; theta5 + 180*u.deg; theta6 ]; 
+n = length(theta);
+for index = 1:n
+    A(index,:,:) = dhparam2matrix(theta(index), d(index), a(index), alpha(index));
+    disp(['The homogenous transformation matrix A', num2str(index), ' is '])
+    disp(squeeze(A(index,:,:)))
+end
+Temp = eye(4)*sym(1);
+T(1, :, :) = Temp; % The composite transformation representing the forward kinematics
+for index = 1:n
+   Temp = simplify(Temp*squeeze(A(index,:,:)));
+   T(1+index, :, :) = Temp;
+end
+T06 = Temp;
+function T = dhparam2matrix(theta, d, a, alpha)
+%dhparam2matrix takes a set of DH parameters for a link and returns a 4x4 homogeneous transformation matrix
+%    takes a set of DH parameters for a link and returns a 4x4 homogeneous transformation matrix
+
+T = [cos(theta), -sin(theta)*cos(alpha),  sin(theta)*sin(alpha), a*cos(theta)
+     sin(theta),  cos(theta)*cos(alpha), -cos(theta)*sin(alpha), a*sin(theta)
+              0,             sin(alpha),             cos(alpha),           d
+              0,                      0,                      0,           1];
+T = simplify(T);
+end
