@@ -1,0 +1,9 @@
+controller_list:
+  - name: fake_arm_controller
+    joints:
+      - pilzjoint_1
+      - pilzjoint_2
+      - pilzjoint_3
+      - pilzjoint_4
+      - pilzjoint_5
+      - pilzjoint_6
